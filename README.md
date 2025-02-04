@@ -43,3 +43,5 @@ applications.
 
 # OUTPUT OF THE TASK
 
+![Image](https://github.com/user-attachments/assets/476ba42a-0bb7-49d6-9543-d76cc83793a0)
+![Image](https://github.com/user-attachments/assets/57e865d8-9aa4-43ea-8a4e-a5ab7cbaff6d)
