@@ -1,0 +1,66 @@
+import requests
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import streamlit as st
+
+# Replace with your OpenWeatherMap API Key
+API_KEY = "your_api_key"
+BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
+
+# Function to fetch weather data
+def fetch_weather(city):
+    params = {"q": city, "appid": API_KEY, "units": "metric"}
+    response = requests.get(BASE_URL, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+# Function to process data
+def process_data(data):
+    if data:
+        weather_info = {
+            "City": data["name"],
+            "Temperature (°C)": data["main"]["temp"],
+            "Humidity (%)": data["main"]["humidity"],
+            "Pressure (hPa)": data["main"]["pressure"],
+            "Wind Speed (m/s)": data["wind"]["speed"]
+        }
+        return weather_info
+    return None
+
+# List of cities to fetch data for
+cities = ["New York", "London", "Tokyo", "Mumbai", "Sydney"]
+weather_data = []
+
+for city in cities:
+    data = fetch_weather(city)
+    processed_data = process_data(data)
+    if processed_data:
+        weather_data.append(processed_data)
+
+# Convert data to DataFrame
+df = pd.DataFrame(weather_data)
+
+# Visualization
+plt.figure(figsize=(10, 5))
+sns.barplot(x="City", y="Temperature (°C)", data=df, palette="coolwarm")
+plt.title("Temperature Comparison Across Cities")
+plt.xlabel("City")
+plt.ylabel("Temperature (°C)")
+plt.show()
+
+# Streamlit Dashboard
+def run_dashboard():
+    st.title("Weather Data Visualization")
+    st.write("### Real-time Weather Data for Multiple Cities")
+    st.dataframe(df)
+    
+    st.write("### Temperature Comparison")
+    fig, ax = plt.subplots()
+    sns.barplot(x="City", y="Temperature (°C)", data=df, palette="coolwarm", ax=ax)
+    st.pyplot(fig)
+
+if __name__ == "__main__":
+    run_dashboard()
